@@ -38,7 +38,7 @@ def run_simulation():
             "relativehumidity":0.0,
             "icing":False,
             "timestep":1,
-            "plot":True,
+            "plot":False,
             "xlabel":"missionspeed",
             "ylabel":"power",
             "title":"First_test",
