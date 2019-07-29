@@ -1,0 +1,22 @@
+Click==7.0
+cycler==0.10.0
+DateTime==4.3
+-e git+git@github.com:rymanderson/Drone-Models.git@fd306d53689b50c4477e74702c3df7b84df41804#egg=drone_awe
+Flask==1.1.1
+Flask-Cors==3.0.8
+gekko==0.2.2
+gunicorn==19.9.0
+itsdangerous==1.1.0
+Jinja2==2.10.1
+jsonpickle==1.2
+kiwisolver==1.1.0
+MarkupSafe==1.1.1
+matplotlib==3.1.1
+numpy==1.17.0
+pyparsing==2.4.1.1
+python-dateutil==2.8.0
+pytz==2019.1
+scipy==1.3.0
+six==1.12.0
+Werkzeug==0.15.5
+zope.interface==4.6.0
