@@ -72,5 +72,5 @@ def run_simulation():
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
 
-app.run()
+# app.run()
 
