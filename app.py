@@ -1,6 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, Response
+from flask_cors import CORS
 import drone_awe
 import jsonpickle
+import traceback
 
 '''
 Notes:
@@ -10,6 +12,7 @@ Notes:
 '''
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def root():
@@ -52,18 +55,22 @@ def run_simulation():
             "weatherend":40,
             "weathernumber":3
         }
-
         a = drone_awe.drone_awe(params)
         data = a.simulate()
-        return jsonpickle.encode(data)
+        resp = Response(jsonpickle.encode(data))
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
     except Exception as err:
         print('Internal Error:')
         print(err)
+        traceback.print_tb(err.__traceback__)
         msg = {
             'error': True,
             'msg': 'An internal error has occured'
         }
-        return jsonpickle.encode(msg)
+        resp = Response(jsonpickle.encode(msg))
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
 
 app.run()
 

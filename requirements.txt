@@ -1,7 +1,7 @@
 Click==7.0
 cycler==0.10.0
 DateTime==4.3
--e git+git@github.com:rymanderson/Drone-Models.git@fd306d53689b50c4477e74702c3df7b84df41804#egg=drone_awe
+drone_awe==0.0.2
 Flask==1.1.1
 Flask-Cors==3.0.8
 gekko==0.2.2
