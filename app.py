@@ -23,29 +23,66 @@ def root():
 @app.route('/getValidationCases')
 def getValidationCases():
     try:
-        a = drone_awe.model({})
-        data = a.getValidationCases()
+        data = drone_awe.validationdatabase
         data = [d for d in data if 'xvalid' in d]
         resp = Response(json.dumps(data))
         return resp
     except Exception as err:
         return utilities.handleError(err)
 
+@app.route('/getDrones')
+def getDrones():
+    try:
+        return Response(json.dumps(drone_awe.drones))
+    except Exception as err:
+        utilities.handleError(err)
+    a.simulate()
+
+
 @app.route('/simulate', methods=['POST'])
 def simulate():
     try:
+        # Track Z-variable
+        zParam = None
+
         params = {}
         if request.data:
             params = json.loads(request.data)
+            # zParam = params['zParam']
 
-        for arg in utilities.defaultArgs:
+        for arg in utilities.DefaultArgs:
             if arg['name'] not in params:
                 print('Missing parameters', arg['name'], '. Using default:', arg['default'])
                 params[arg['name']] = arg['default']
             
         a = drone_awe.model(params)
-        data = a.simulate()
-        resp = Response(json.dumps(data))
+        a.simulate()
+        data = a.output
+
+        resp = {
+            'plottables': [],
+            'zAxis': {
+                'id': zParam,
+                'displayName': '',
+                'values': []
+            }
+        }
+
+        if zParam:
+            resp['zAxis']['displayName'] = data['zvals']
+
+        for key in list(data.keys()):
+            if type(data[key][0]) != str and key != 'zvals':
+                l = filter(lambda el: el['param'] == key, utilities.ParamMap)
+                displayName = list(l)[0]['display']
+                plottable = {
+                    'id': key,
+                    'displayName': displayName,
+                    'values': data[key] 
+                }
+                resp['plottables'].append(plottable)
+
+        resp = Response(json.dumps(resp))
         return resp
     except Exception as err:
         return utilities.handleError(err)
