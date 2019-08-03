@@ -73,15 +73,18 @@ def simulate():
 
         for key in list(data.keys()):
             if type(data[key][0]) != str and key != 'zvals':
-                l = filter(lambda el: el['param'] == key, utilities.ParamMap)
-                displayName = list(l)[0]['display']
-                plottable = {
-                    'id': key,
-                    'displayName': displayName,
-                    'values': data[key] 
-                }
-                resp['plottables'].append(plottable)
+                l = list(filter(lambda el: el['param'] == key, utilities.ParamMap))
 
+                if len(l) >= 1:
+                    displayName = l[0]['display']
+                    plottable = {
+                        'id': key,
+                        'displayName': displayName,
+                        'values': data[key] 
+                    }
+                    resp['plottables'].append(plottable)
+                else:
+                    print(f'Missing ParamMep entry for {key}')
         resp = Response(json.dumps(resp))
         return resp
     except Exception as err:

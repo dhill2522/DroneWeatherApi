@@ -1,6 +1,6 @@
 from flask import Response
-import traceback
 import json
+import traceback
 
 DefaultArgs = [
     { 'name': 'validation', 'default': True },
