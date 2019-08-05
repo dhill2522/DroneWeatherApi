@@ -2,6 +2,7 @@ from flask import Flask, request, Response
 from flask_cors import CORS
 import drone_awe
 import json
+import copy
 import utilities
 
 '''
@@ -33,7 +34,23 @@ def getValidationCases():
 @app.route('/getDrones')
 def getDrones():
     try:
-        return Response(json.dumps(drone_awe.drones))
+        drones = copy.deepcopy(drone_awe.drones)
+        resp = []
+        for drone in drones:
+            el = {}
+            if 'battery' in drone:
+                for prop in drone['battery']:
+                    l = list(filter(lambda el: el['param'] == prop, utilities.ParamMap))
+                    if len(l) > 0:
+                        el[l[0]['display']] = drone['battery'][prop]
+                del drone['battery']
+            for prop in drone:
+                l = list(filter(lambda el: el['param'] == prop, utilities.ParamMap))
+                if len(l) > 0:
+                    el[l[0]['display']] = drone[prop]
+            resp.append(el)
+                
+        return Response(json.dumps(resp))
     except Exception as err:
         utilities.handleError(err)
     a.simulate()
@@ -52,7 +69,7 @@ def simulate():
 
         for arg in utilities.DefaultArgs:
             if arg['name'] not in params:
-                print('Missing parameters', arg['name'], '. Using default:', arg['default'])
+                print(f'Missing', {arg['name']}, 'Using default value:', {arg['default']})
                 params[arg['name']] = arg['default']
             
         a = drone_awe.model(params)
@@ -60,6 +77,9 @@ def simulate():
         data = a.output
 
         resp = {
+            'error': False,
+            'errorType': None,
+            'log': 'Successful simulation',
             'plottables': [],
             'zAxis': {
                 'id': zParam,
@@ -72,7 +92,7 @@ def simulate():
             resp['zAxis']['displayName'] = data['zvals']
 
         for key in list(data.keys()):
-            if type(data[key][0]) != str and key != 'zvals':
+            if key != 'zvals' and type(data[key][0][0]) != str:
                 l = list(filter(lambda el: el['param'] == key, utilities.ParamMap))
 
                 if len(l) >= 1:
