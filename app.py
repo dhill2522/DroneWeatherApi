@@ -79,7 +79,7 @@ def simulate():
         resp = {
             'error': False,
             'errorType': None,
-            'log': 'Successful simulation',
+            'log': a.outputlog,
             'plottables': [],
             'zAxis': {
                 'id': zParam,
