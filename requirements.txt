@@ -1,7 +1,7 @@
 Click==7.0
 cycler==0.10.0
 DateTime==4.3
-drone-awe==0.0.4
+drone-awe==1.0.0
 Flask==1.1.1
 Flask-Cors==3.0.8
 gekko==0.2.2

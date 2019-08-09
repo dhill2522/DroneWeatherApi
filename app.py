@@ -3,6 +3,7 @@ from flask_cors import CORS
 import drone_awe
 import json
 import copy
+import traceback
 import utilities
 
 '''
@@ -111,7 +112,19 @@ def simulate():
             resp = Response(json.dumps(resp))
             return resp
         except Exception as err:
-            pass
+            resp = {
+                'error': True,
+                'errorType': None,
+                'log': 'Simulation failed: ' + err.__repr__(),
+                'plottables': [],
+                'zAxis': {
+                    'id': zParam,
+                    'displayName': '',
+                    'values': []
+                }
+            }
+            resp = Response(json.dumps(resp))
+            return resp
     except Exception as err:
         return utilities.handleError(err)
 
