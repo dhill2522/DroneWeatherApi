@@ -73,42 +73,48 @@ def simulate():
                 params[arg['name']] = arg['default']
             
         a = drone_awe.model(params)
-        a.simulate()
-        data = a.output
+        try:
+            a.simulate()
+            data = a.output
 
-        resp = {
-            'error': False,
-            'errorType': None,
-            'log': 'Successful simulation',
-            'plottables': [],
-            'zAxis': {
-                'id': zParam,
-                'displayName': '',
-                'values': []
+            resp = {
+                'error': False,
+                'errorType': None,
+                'log': 'Successful simulation',
+                'plottables': [],
+                'zAxis': {
+                    'id': zParam,
+                    'displayName': '',
+                    'values': []
+                }
             }
-        }
 
-        if zParam:
-            resp['zAxis']['displayName'] = data['zvals']
+            if zParam:
+                resp['zAxis']['displayName'] = data['zvals']
 
-        for key in list(data.keys()):
-            if key != 'zvals' and type(data[key][0][0]) != str:
-                l = list(filter(lambda el: el['param'] == key, utilities.ParamMap))
+            for key in list(data.keys()):
+                if key != 'zvals' and type(data[key][0][0]) != str:
+                    l = list(filter(lambda el: el['param'] == key, utilities.ParamMap))
 
-                if len(l) >= 1:
-                    displayName = l[0]['display']
-                    plottable = {
-                        'id': key,
-                        'displayName': displayName,
-                        'values': data[key] 
-                    }
-                    resp['plottables'].append(plottable)
-                else:
-                    print(f'Missing ParamMep entry for {key}')
-        resp = Response(json.dumps(resp))
-        return resp
+                    if len(l) >= 1:
+                        displayName = l[0]['display']
+                        plottable = {
+                            'id': key,
+                            'displayName': displayName,
+                            'values': data[key] 
+                        }
+                        if key == 'missionspeed':
+                            print(plottable)
+                        resp['plottables'].append(plottable)
+                    else:
+                        print(f'Missing ParamMep entry for {key}')
+            resp = Response(json.dumps(resp))
+            return resp
+        except Exception as err:
+            pass
     except Exception as err:
         return utilities.handleError(err)
 
-app.run()
+if __name__ == '__main__':
+    app.run()
 
