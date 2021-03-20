@@ -7,7 +7,7 @@ Flask-Cors==3.0.8
 gekko==0.2.2
 gunicorn==19.9.0
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 jsonpickle==1.2
 kiwisolver==1.1.0
 MarkupSafe==1.1.1
